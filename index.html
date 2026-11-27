@@ -216,7 +216,7 @@
     return new Promise((resolve, reject) => {
       const s = document.createElement('script');
       window.__D = (_id, payload) => resolve(payload);
-      s.src = 'data/' + file + '.js';
+      s.src = 'data/' + file + '.js?t=' + Date.now();
       s.onerror = () => reject(new Error('notfound'));
       s.onload = () => s.remove();
       document.head.appendChild(s);
