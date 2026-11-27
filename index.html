@@ -289,6 +289,10 @@
     const tr = document.createElement('tr'); tr.className = 'total';
     tr.innerHTML = `<td colspan="2">총점</td><td>${maxSum}</td><td><span class="score">${sum}</span></td><td></td>`;
     tb.appendChild(tr);
+    const g = document.createElement('tr'); g.className = 'total';
+    const grade = pend.length ? null : (sum >= 90 ? 'A' : sum >= 80 ? 'B' : sum >= 70 ? 'C' : sum >= 60 ? 'D' : 'E');
+    g.innerHTML = `<td colspan="2">성취도</td><td></td><td>${grade ? `<span class="score">${grade}</span>` : '<span class="pending">산출 예정</span>'}</td><td></td>`;
+    tb.appendChild(g);
     $('pendingNote').textContent = pend.length ? `※ ${pend.join(', ')}번 수행평가는 결과가 공개되면 총점에 반영됩니다.` : '';
   }
 
