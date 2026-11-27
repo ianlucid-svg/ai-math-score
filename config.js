@@ -27,7 +27,7 @@ window.SITE = {
       "max": 20
     }
   ],
-  "endpoint": "",
+  "endpoint": "https://script.google.com/macros/s/AKfycbyyFN4j08reEnFOP_Ma1Vlq7MzULSdnVeu6BjjBH2OWq6WK6rtcA-BNxDWPuOgGKE007g/exec",
   "title": "인공지능수학 수행평가 점수 확인",
   "subtitle": "2026학년도 2학기 경기도수원교육지원청 공동교육과정"
 };
