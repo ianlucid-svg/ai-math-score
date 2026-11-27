@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>수행평가 점수 확인</title>
-<script src="config.js"></script>
+<script>document.write('<script src="config.js?t='+Date.now()+'"><\/script>');</script>
 <style>
   :root{
     --ink:#1b2233; --sub:#5b6478; --line:#d9deea; --soft:#f3f5fa; --bg:#eef1f7;
@@ -369,15 +369,22 @@
       btn.textContent = '전송 중…';
 
       if (S.endpoint) {
-        await fetch(S.endpoint, {
-          method: 'POST', mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            name: student.name, school: student.school, sid: student.sid,
-            agree, comment, submittedAt: nowStr(when), fileName,
-            image: dataUrl.split(',')[1]
-          })
-        });
+        let res;
+        try {
+          res = await fetch(S.endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              name: student.name, school: student.school, sid: student.sid,
+              agree, comment, submittedAt: nowStr(when), fileName,
+              image: dataUrl.split(',')[1]
+            })
+          });
+        } catch (netErr) { throw new Error('인터넷 연결을 확인해 주세요.'); }
+        const text = await res.text();
+        let r = null; try { r = JSON.parse(text); } catch (_) {}
+        if (!r) throw new Error('메일 서버 설정 오류입니다. 선생님께 알려 주세요. (응답 형식 오류)');
+        if (!r.ok) throw new Error('메일 전송 실패: ' + (r.error || '알 수 없는 오류'));
         showDone(dataUrl, true);
       } else {
         // 메일 주소(endpoint)가 아직 연결되지 않은 샘플 모드
@@ -387,7 +394,7 @@
       btn.textContent = '제출 완료';
     } catch (ex) {
       console.error(ex);
-      alert('제출에 실패했습니다. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.');
+      alert('제출에 실패했습니다.\n' + (ex.message || '') + '\n잠시 후 다시 눌러 주세요.');
       btn.disabled = false; btn.textContent = '최종';
       sw.classList.remove('locked'); $('comment').classList.remove('hidden'); cp.classList.add('hidden'); $('stamp').textContent = '';
     }
